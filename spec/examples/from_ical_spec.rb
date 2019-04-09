@@ -76,6 +76,11 @@ module IceCube
       expect(rule).to eq(IceCube::Rule.weekly.count(5))
     end
 
+    it 'should be able to parse a rule with a by month day' do
+      rule = IceCube::Rule.from_ical("FREQ=WEEKLY;INTERVAL=2;BYMONTHDAY=28,29,30")
+      expect(rule).to eq(IceCube::Rule.weekly.interval(2))
+    end
+
     it 'should be able to parse a rule with an interval' do
       rule = IceCube::Rule.from_ical("FREQ=DAILY;INTERVAL=2")
       expect(rule).to eq(IceCube::Rule.daily.interval(2))
@@ -84,6 +89,11 @@ module IceCube
     it 'should be able to parse week start (WKST)' do
       rule = IceCube::Rule.from_ical("FREQ=WEEKLY;INTERVAL=2;WKST=MO")
       expect(rule).to eq(IceCube::Rule.weekly(2, :monday))
+    end
+
+    it 'should be able to parse by_set_pos start (BYSETPOS)' do
+      rule = IceCube::Rule.from_ical("FREQ=MONTHLY;BYDAY=MO,WE;BYSETPOS=-1,1")
+      expect(rule).to eq(IceCube::Rule.monthly.day(:monday, :wednesday).by_set_pos([-1, 1]))
     end
 
     it 'should return no occurrences after daily interval with count is over' do

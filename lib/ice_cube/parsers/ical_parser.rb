@@ -4,7 +4,7 @@ module IceCube
       data = {}
       ical_string.each_line do |line|
         (property, value) = line.split(':')
-        (property, tzid) = property.split(';')
+        (property, _tzid) = property.split(';')
         case property
         when 'DTSTART'
           data[:start_time] = TimeUtil.deserialize_time(value)
@@ -75,6 +75,7 @@ module IceCube
         when 'BYYEARDAY'
           validations[:day_of_year] = value.split(',').map(&:to_i)
         when 'BYSETPOS'
+          params[:validations][:by_set_pos] = value.split(',').collect(&:to_i)
         else
           validations[name] = nil # invalid type
         end

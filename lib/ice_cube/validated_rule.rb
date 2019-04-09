@@ -20,7 +20,8 @@ module IceCube
       :base_sec, :base_min, :base_day, :base_hour, :base_month, :base_wday,
       :day_of_year, :second_of_minute, :minute_of_hour, :day_of_month,
       :hour_of_day, :month_of_year, :day_of_week,
-      :interval
+      :interval,
+      :by_set_pos
     ]
 
     attr_reader :validations
@@ -53,7 +54,10 @@ module IceCube
         @time = @start_time if @time < @start_time
       end
 
-      return nil unless find_acceptable_time_before(closing_time)
+      unless find_acceptable_time_before(closing_time)
+        @uses = 1 if @uses.to_i == 0
+        return nil
+      end
 
       @uses += 1 if @time
       @time
